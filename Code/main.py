@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel , Field
 app= FastAPI()
 
 @app.get("/")
@@ -106,3 +107,56 @@ def products(
         "include_price":details
 
     }
+
+
+## lession 4 POST
+## post is gendrally usered to create or send data
+
+class User(BaseModel):
+    name:str = Field(min_length=3)
+    age: int =Field(ge=18)
+    role:str="Student"
+
+@app.post("/users1")
+def create_user(user:User):
+    return user
+
+class Product(BaseModel):
+    name:str
+    price:float
+    qua:int
+
+@app.post("/Products")
+def Create_pro(porduct:Product):
+    return{
+        "Name":Product.name,
+        "price":product.price,
+        "Quantity":product.qua
+
+    }
+class ProductUpdate(BaseModel):
+    name: str
+    price: float
+
+@app.put("/products/{product_id}")
+def update_product(
+    product_id: int,
+    product: ProductUpdate,
+    notify: bool = False
+):
+    return{
+          "product_id": product_id,
+        "name": product.name,
+        "price": product.price,
+        "notify": notify
+    }
+
+class Student(BaseModel):
+    name:str=Field(min_length=4)
+    age:int=Field(ge=18)
+    course:str
+
+
+@app.post("/students")
+def  create_student(student:Student):
+    return student
