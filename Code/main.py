@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from pydantic import BaseModel , Field
+from fastapi import FastAPI,HTTPException
+from pydantic import BaseModel , Field 
 app= FastAPI()
 
 @app.get("/")
@@ -160,3 +160,157 @@ class Student(BaseModel):
 @app.post("/students")
 def  create_student(student:Student):
     return student
+
+## lession 5
+
+class userResponce(BaseModel):
+    name: str
+    age: int
+class userCreate(BaseModel):
+    name:str
+    age:int
+    password:str
+
+@app.get("/user",response_model=userResponce)
+def get_user():
+    return{
+        "name":"Abudr",
+        "age":19,
+        "password":"secret123"
+        
+    }
+@app.post("/users",response_model=userResponce,status_code=201)
+def create_user(user:userCreate):
+    return user
+"""| Code  | Meaning                   |
+| ----- | ------------------------- |
+| `200` | OK / successful request   |
+| `201` | Created                   |
+| `204` | Success, no response body |
+| `400` | Bad Request               |
+| `401` | Unauthorized              |
+| `403` | Forbidden                 |
+| `404` | Not Found                 |
+| `422` | Validation Error          |
+| `500` | Internal Server Error     |
+"""
+
+class UserCreate(BaseModel):
+    name: str
+    age: int
+    password: str
+
+
+class UserResponse(BaseModel):
+    name: str
+    age: int
+
+
+@app.post(
+    "/users",
+    response_model=UserResponse,
+    status_code=201
+)
+def create_user(user: UserCreate):
+    return user
+
+
+class ProductCreate(BaseModel):
+    name: str
+    price: float
+    quantity: int
+
+
+class ProductResponse(BaseModel):
+    name: str
+    price: float
+
+
+@app.post(
+    "/products",
+    response_model=ProductResponse,
+    status_code=201
+)
+def create_product(product: ProductCreate):
+    return product
+
+
+@app.get(
+    "/products/{product_id}",
+    response_model=ProductResponse
+)
+def get_product(product_id: int):
+    return {
+        "name": "Laptop",
+        "price": 55000
+    }  
+
+##   HTTPException
+@app.get("/productse/{product_id}")
+def get_product(product_id:int):
+
+
+    if product_id!=1:
+        raise HTTPException(
+            status_code=404,
+
+            detail="bruh where is that porduct bruh ...."
+        )
+    return{
+        "name":"laptop",
+        "price":324432
+      }
+products12 = {
+    1: {
+        "name": "Laptop",
+        "price": 55000
+    },
+    2: {
+        "name": "Mouse",
+        "price": 1000
+    },
+    3: {
+        "name": "Keyboard",
+        "price": 2500
+    }
+}
+@app.get("/products2/{product_id}",response_model=ProductResponse)
+def get_product(product_id: int):
+
+    if product_id not in products12:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
+
+    return products12[product_id]
+studentsw = {
+    1: {
+        "name": "Abdur",
+        "age": 19,
+        "course": "Computer Science"
+    },
+    2: {
+        "name": "Alex",
+        "age": 20,
+        "course": "Information Technology"
+    }
+}
+class StudentResponse(BaseModel):
+    name: str
+    age: int
+    course: str
+
+@app.get(
+    "/students/{student_id}",
+    response_model=StudentResponse
+)
+def get_student(student_id: int):
+
+    if student_id not in studentsw:
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+        )
+
+    return studentsw[student_id]
