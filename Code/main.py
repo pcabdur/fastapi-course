@@ -56,3 +56,53 @@ def calculator(
     return {
         "result":a+b
     }
+## path parameter  Lession 3 
+
+@app.get("/user/{user_id}")
+def get_user(user_id:int):
+    return{
+        "user_id":user_id,
+        "message":f"User{user_id} found"
+    }
+
+## string
+
+@app.get("/products/{product_name}")
+def get_product(product_name: str):
+    return {
+        "product": product_name
+    }
+
+
+@app.get("/users/{user_id}")
+def get_user(
+    user_id: int,
+    details: bool = False
+):
+    return {
+        "user_id": user_id,
+        "details": details
+    }
+
+@app.get("/users1/{user_id}/posts/{post_id}")
+def products1(
+    user_id:int,
+    post_id:int
+):
+    return{
+        "user id":user_id,
+        "post id":post_id
+    }
+
+@app.get("/products1/{products_id}")
+def products(
+    products_id:int,
+    name:str,
+    details:bool=True
+):
+    return {
+        "product_id":products_id,
+        "name":name,
+        "include_price":details
+
+    }
